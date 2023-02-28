@@ -125,3 +125,12 @@ INSERT INTO customer VALUES(2,"Amal", "Colombo", "0112233445");
     <pre><code>
 GRANT INSERT ON sample.customer TO 'usr2'@'localhost' WITH GRANT OPTION;
     </code></pre>
+    <p>If There are multilevel privilages granted, Let's say user A granted INSERT privilage to some table to user B with grant option
+        and user B granted the same privilage to another user C, Then revoking privilages from user B may cause revoking privilages from user C as Well,
+        Depending on your mysql version we can avoid this issue by using RESTRICT keyword at the end of the statement:
+    </p>
+    <pre><code>
+REVOKE INSERT ON sample.customer FROM 'usr1'@'localhost' RESTRICT;
+-- this will throw an error if there are cascading privilages
+    </code></pre>
+    <p>That's it!</p>
