@@ -20,11 +20,25 @@
             address varchar(255),
             contact text(10)
         );
+
+        INSERT INTO customer VALUES 
+            (1, 'Emily Green', '1234 Main St', '4567891230'),
+            (2, 'Jason Lee', '5678 Elm St', '6789012345'),
+            (3, 'Sarah Kim', '9876 Oak Ave', '1234567890'),
+            (4, 'Michael Chen', '4321 Pine St', '8901234567'),
+            (5, 'Amanda Davis', '2468 Cedar Rd', '3456789012');
         
         CREATE TABLE merchant(
             id int PRIMARY KEY,
             name varchar(255)
         );
+
+        INSERT INTO merchant VALUES 
+            (1, 'Bluebird Coffee'),
+            (2, 'Green Garden Nursery'),
+            (3, 'Redwood Furniture'),
+            (4, 'Yellowstone Adventure Co.'),
+            (5, 'Purple Plum Bakery');
             </code></pre>
     <!-- Account Creation -->
     <h1>Creating accounts</h1>
@@ -123,14 +137,15 @@ GRANT INSERT, UPDATE (name), DELETE ON sample.customer TO 'usr1'@'localhost';
     </code></pre>
     <p>Now log into the 'usr1'@'localhost' and try below commands</p>
     <pre><code class="language-sql">
-INSERT INTO customer VALUES(1,"Ashan","Homagama","0714872852");<br>
-UPDATE customer SET name = "Dinuka" WHERE id = 1;
+INSERT INTO customer VALUES(6,"Emily Green","1234 Main St, Anytown, USA","4567891230");<br>
+UPDATE customer SET name = "Sarah Kim" WHERE id = 6;
     </code></pre>
     <p>Granting/Revoking ALL permissions</p>
     <pre><code class="language-sql">
 GRANT ALL ON sample.* TO 'usr1'@'localhost';<br>
 REVOKE ALL ON sample.* FROM 'usr1'@'localhost';
     </code></pre>
+    <br><br>
     <h1>Delegation of Privileges</h1>
     <p>Two types,</p>
     <ul>
@@ -152,7 +167,7 @@ GRANT INSERT ON sample.customer TO 'usr2'@'localhost';
     </code></pre>
     <p>Try out below insert query using 'usr2'@'localhost'</p>
     <pre><code class="language-sql">
-INSERT INTO customer VALUES(2,"Amal", "Colombo", "0112233445");
+INSERT INTO customer VALUES(7,"Jason Lee", "5678 Elm St, Anytown, USA", "6789012345");
     </code></pre>
     <p>What happens in multi level grant is that if you have the privileges to grant privileges to other user
         account,
