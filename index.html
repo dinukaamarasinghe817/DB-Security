@@ -37,6 +37,16 @@
     <pre><code class="language-sql">
         CREATE USER 'usr1'@'localhost' IDENTIFIED BY 'usr1pw';
     </code></pre>
+    <h1>Viewing the users</h1>
+    <h4>Try the following commands</h4>
+    <pre>
+        <code class="language-sql">
+            -- show the current user
+            SELECT USER();
+            -- show all the users
+            SELECT user FROM mysql.user;
+        </code>
+    </pre>
     <!--  -->
     <h1>Granting & Revoking Privileges</h1>
     <h4>Granting privilages syntax</h4>
