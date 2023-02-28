@@ -89,7 +89,7 @@ GRANT REFERENCES, INDEX ON merchant TO 'usr1'@'localhost';
     </ul>
     <p>From your root user account, grant these privileges to the 'usr1'@'localhost'</p>
     <pre><code>
-GRANT INSERT, UPDATE (name), DELETE ON sample.customer TO 'usr1'@'localhost';
+GRANT INSERT, UPDATE (name), SELECT, DELETE ON sample.customer TO 'usr1'@'localhost';
     </code></pre>
     <p>Now log into the 'usr1'@'localhost' and try below commands</p>
     <pre><code>
