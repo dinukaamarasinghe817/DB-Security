@@ -1,27 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>DB Security</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./prism.css">
 </head>
+
 <body>
+    <!-- Setting up the sample database -->
+    <h1>Setting up the sample database</h1>
+    <pre><code class="language-sql">
+        CREATE DATABASE sample;
+        
+        CREATE TABLE customer(
+            id int PRIMARY KEY,
+            name varchar(255),
+            address varchar(255),
+            contact text(10)
+        );
+        
+        CREATE TABLE merchant(
+            id int PRIMARY KEY,
+            name varchar(255)
+        );
+            </code></pre>
+    <!-- Account Creation -->
+    <h1>Creating accounts</h1>
+    <h4>Syntax for creating users</h4>
+    <pre><code class="language-sql">
+        CREATE USER &lt;username&gt;@&lt;hostname&gt; IDENTIFIED BY &lt;password&gt;
+        </code>
+        </pre>
+    <h4>Let's create a new user</h4>
+    <pre><code class="language-sql">
+        CREATE USER 'usr1'@'localhost' IDENTIFIED BY 'usr1pw';
+    </code></pre>
+    <h1>Viewing the users</h1>
+    <h4>Try the following commands</h4>
+    <pre>
+        <code class="language-sql">
+            -- show the current user
+            SELECT USER();
+            -- show all the users
+            SELECT user FROM mysql.user;
+        </code>
+    </pre>
+    <!--  -->
     <h1>Granting & Revoking Privileges</h1>
     <h4>Granting privilages syntax</h4>
-    <pre><code>
+    <pre><code class="language-sql">
 GRANT &lt;PRIVILAGE1, PRIVILAGE1, PRIVILAGE1&gt;
 ON &lt;RELATION OR VIEW&gt;
 TO &lt;USER1,USER2,USER3&gt;
     </code></pre>
     <h4>Revoking privilages syntax</h4>
-    <pre><code>
+    <pre><code class="language-sql">
 REVOKE &lt;PRIVILAGE LIST&gt;
 ON &lt;RELATION OR VIEW&gt;
 FROM &lt;USER LIST&gt;
     </code></pre>
     <p>There are two types of privilages mainly,</p>
-    <strong><p>     1. System privilages</p></strong>
-    <strong><p>     2. Object privilages</p></strong><br>
+    <strong>
+        <p> 1. System privilages</p>
+    </strong>
+    <strong>
+        <p> 2. Object privilages</p>
+    </strong><br>
     <h2>1. System Privileges</h2>
     <ul>
         <li>Create User</li>
@@ -30,29 +76,13 @@ FROM &lt;USER LIST&gt;
         <li>Drop Table</li>
         <li>Create View / Create Procedure</li>
     </ul>
-    <pre><code>
-CREATE DATABASE sample;
 
-CREATE TABLE customer(
-    id int PRIMARY KEY,
-    name varchar(255),
-    address varchar(255),
-    contact text(10)
-);
-
-CREATE TABLE merchant(
-    id int PRIMARY KEY,
-    name varchar(255)
-);
-    </code></pre>
-    <h3>Granting privileges to create new users</h3>
-    <pre><code>
-CREATE USER 'usr1'@'localhost' IDENTIFIED BY 'usr1pw';
-
+    <h3>Granting privileges to create new users for the newly creared usr1</h3>
+    <pre><code class="language-sql">
 GRANT CREATE USER ON *.* TO 'usr1'@'localhost';
     </code></pre>
     <h3>Granting privileges to create new tables in a database</h3>
-    <pre><code>
+    <pre><code class="language-sql">
 GRANT CREATE ON sample.* TO 'usr1'@'localhost';
 
 CREATE table test(
@@ -61,7 +91,7 @@ CREATE table test(
 );
     </code></pre>
     <p>But you won't be able to create any table with create permissions. Try the below command:</p>
-    <pre><code>
+    <pre><code class="language-sql">
 CREATE table orders(
     id int PRIMARY KEY, 
     customer int, 
@@ -71,12 +101,12 @@ CREATE table orders(
 );
     </code></pre>
     <p>You'll need the referencing and indexing permission in such scenarios:</p>
-    <pre><code>
+    <pre><code class="language-sql">
 GRANT REFERENCES, INDEX ON customer TO 'usr1'@'localhost';
 GRANT REFERENCES, INDEX ON merchant TO 'usr1'@'localhost';
     </code></pre>
     <p>Now try the previous create table command again and see.</p>
-    
+
     <h2>2. Object Privileges</h2>
     <ul>
         <li>Insert</li>
@@ -88,49 +118,66 @@ GRANT REFERENCES, INDEX ON merchant TO 'usr1'@'localhost';
         <li>ALL</li>
     </ul>
     <p>From your root user account, grant these privileges to the 'usr1'@'localhost'</p>
+    <<<<<<< HEAD <pre><code class="language-sql">
+GRANT INSERT, UPDATE (name), DELETE ON sample.customer TO 'usr1'@'localhost';
+=======
     <pre><code>
 GRANT INSERT, UPDATE (name), SELECT, DELETE ON sample.customer TO 'usr1'@'localhost';
+>>>>>>> 551ecc8015d5b1996c3b933c3de6d497db0df0e5
     </code></pre>
-    <p>Now log into the 'usr1'@'localhost' and try below commands</p>
-    <pre><code>
+        <p>Now log into the 'usr1'@'localhost' and try below commands</p>
+        <pre><code class="language-sql">
 INSERT INTO customer VALUES(1,"Ashan","Homagama","0714872852");<br>
 UPDATE customer SET name = "Dinuka" WHERE id = 1;
     </code></pre>
-    <p>Granting/Revoking ALL permissions</p>
-    <pre><code>
+        <p>Granting/Revoking ALL permissions</p>
+        <pre><code class="language-sql">
 GRANT ALL ON sample.* TO 'usr1'@'localhost';<br>
 REVOKE ALL ON sample.* FROM 'usr1'@'localhost';
     </code></pre>
-    <h1>Delegation of Privileges</h1>
-    <p>Two types,</p>
-    <ul>
-        <li>Single level grant</li>
-        <li>Multilevel grant</li>
-    </ul>
-    <p>Single level means, you can't distribute the privileges you got from your upper layer.</p>
-    <p>Create a new user account 'usr2'@'localhost' using root user, and try below commands using the 'usr1'@'localhost' account</p>
-    <pre><code>
+        <h1>Delegation of Privileges</h1>
+        <p>Two types,</p>
+        <ul>
+            <li>Single level grant</li>
+            <li>Multilevel grant</li>
+        </ul>
+        <p>Single level means, you can't distribute the privileges you got from your upper layer.</p>
+        <p>Create a new user account 'usr2'@'localhost' using root user, and try below commands using the
+            'usr1'@'localhost'
+            account</p>
+        <pre><code class="language-sql">
 GRANT INSERT ON sample.customer TO 'usr2'@'localhost';
     </code></pre>
-    <p>Now grant privileges to the 'usr1'@'localhost' WITH GRANT OPTION</p>
-    <pre><code>
-GRANT INSERT ON sample.customer TO 'usr1'@'localhost' WITH GRANT OPTION;<br>
-GRANT INSERT ON sample.customer TO 'usr2'@'localhost';
+        <p>Now grant privileges to the 'usr1'@'localhost' WITH GRANT OPTION</p>
+        <pre><code class="language-sql">
+        -- as the root user, grant the updated privilege to to the usr1
+        GRANT INSERT ON sample.customer TO 'usr1'@'localhost' WITH GRANT OPTION;
+        -- now usr1 can grant usr2 the privilege from inserting on sample.customer
+        GRANT INSERT ON sample.customer TO 'usr2'@'localhost';
     </code></pre>
-    <p>Try out below insert query using 'usr2'@'localhost'</p>
-    <pre><code>
+        <p>Try out below insert query using 'usr2'@'localhost'</p>
+        <pre><code class="language-sql">
 INSERT INTO customer VALUES(2,"Amal", "Colombo", "0112233445");
     </code></pre>
-    <p>What happens in multi level grant is that if you have the privileges to grant privileges to other user account, you grant them with grant option so that they also can distribute that privileges,</p>
-    <pre><code>
+        <p>What happens in multi level grant is that if you have the privileges to grant privileges to other user
+            account,
+            you grant them with grant option so that they also can distribute that privileges,</p>
+        <pre><code class="language-sql">
 GRANT INSERT ON sample.customer TO 'usr2'@'localhost' WITH GRANT OPTION;
     </code></pre>
-    <p>If There are multilevel privilages granted, Let's say user A granted INSERT privilage to some table to user B with grant option
-        and user B granted the same privilage to another user C, Then revoking privilages from user B may cause revoking privilages from user C as Well,
-        Depending on your mysql version we can avoid this issue by using RESTRICT keyword at the end of the statement:
-    </p>
-    <pre><code>
+        <p>If There are multilevel privilages granted, Let's say user A granted INSERT privilage to some table to user B
+            with grant option
+            and user B granted the same privilage to another user C, Then revoking privilages from user B may cause
+            revoking privilages from user C as Well,
+            Depending on your mysql version we can avoid this issue by using RESTRICT keyword at the end of the
+            statement:
+        </p>
+        <pre><code class="language-sql">
 REVOKE INSERT ON sample.customer FROM 'usr1'@'localhost' RESTRICT;
 -- this will throw an error if there are cascading privilages
-    </code></pre>
-    <p>That's it!</p>
+</code></pre>
+        <p>That's it!</p>
+        <script src="./prism.js"></script>
+</body>
+
+</html>
