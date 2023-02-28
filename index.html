@@ -118,48 +118,66 @@ GRANT REFERENCES, INDEX ON merchant TO 'usr1'@'localhost';
         <li>ALL</li>
     </ul>
     <p>From your root user account, grant these privileges to the 'usr1'@'localhost'</p>
-    <pre><code class="language-sql">
+    <<<<<<< HEAD <pre><code class="language-sql">
 GRANT INSERT, UPDATE (name), DELETE ON sample.customer TO 'usr1'@'localhost';
+=======
+    <pre><code>
+GRANT INSERT, UPDATE (name), SELECT, DELETE ON sample.customer TO 'usr1'@'localhost';
+>>>>>>> 551ecc8015d5b1996c3b933c3de6d497db0df0e5
     </code></pre>
-    <p>Now log into the 'usr1'@'localhost' and try below commands</p>
-    <pre><code class="language-sql">
+        <p>Now log into the 'usr1'@'localhost' and try below commands</p>
+        <pre><code class="language-sql">
 INSERT INTO customer VALUES(1,"Ashan","Homagama","0714872852");<br>
 UPDATE customer SET name = "Dinuka" WHERE id = 1;
     </code></pre>
-    <p>Granting/Revoking ALL permissions</p>
-    <pre><code class="language-sql">
+        <p>Granting/Revoking ALL permissions</p>
+        <pre><code class="language-sql">
 GRANT ALL ON sample.* TO 'usr1'@'localhost';<br>
 REVOKE ALL ON sample.* FROM 'usr1'@'localhost';
     </code></pre>
-    <h1>Delegation of Privileges</h1>
-    <p>Two types,</p>
-    <ul>
-        <li>Single level grant</li>
-        <li>Multilevel grant</li>
-    </ul>
-    <p>Single level means, you can't distribute the privileges you got from your upper layer.</p>
-    <p>Create a new user account 'usr2'@'localhost' using root user, and try below commands using the 'usr1'@'localhost'
-        account</p>
-    <pre><code class="language-sql">
+        <h1>Delegation of Privileges</h1>
+        <p>Two types,</p>
+        <ul>
+            <li>Single level grant</li>
+            <li>Multilevel grant</li>
+        </ul>
+        <p>Single level means, you can't distribute the privileges you got from your upper layer.</p>
+        <p>Create a new user account 'usr2'@'localhost' using root user, and try below commands using the
+            'usr1'@'localhost'
+            account</p>
+        <pre><code class="language-sql">
 GRANT INSERT ON sample.customer TO 'usr2'@'localhost';
     </code></pre>
-    <p>Now grant privileges to the 'usr1'@'localhost' WITH GRANT OPTION</p>
-    <pre><code class="language-sql">
+        <p>Now grant privileges to the 'usr1'@'localhost' WITH GRANT OPTION</p>
+        <pre><code class="language-sql">
         -- as the root user, grant the updated privilege to to the usr1
         GRANT INSERT ON sample.customer TO 'usr1'@'localhost' WITH GRANT OPTION;
         -- now usr1 can grant usr2 the privilege from inserting on sample.customer
         GRANT INSERT ON sample.customer TO 'usr2'@'localhost';
     </code></pre>
-    <p>Try out below insert query using 'usr2'@'localhost'</p>
-    <pre><code class="language-sql">
+        <p>Try out below insert query using 'usr2'@'localhost'</p>
+        <pre><code class="language-sql">
 INSERT INTO customer VALUES(2,"Amal", "Colombo", "0112233445");
     </code></pre>
-    <p>What happens in multi level grant is that if you have the privileges to grant privileges to other user account,
-        you grant them with grant option so that they also can distribute that privileges,</p>
-    <pre><code class="language-sql">
+        <p>What happens in multi level grant is that if you have the privileges to grant privileges to other user
+            account,
+            you grant them with grant option so that they also can distribute that privileges,</p>
+        <pre><code class="language-sql">
 GRANT INSERT ON sample.customer TO 'usr2'@'localhost' WITH GRANT OPTION;
     </code></pre>
-    <script src="./prism.js"></script>
+        <p>If There are multilevel privilages granted, Let's say user A granted INSERT privilage to some table to user B
+            with grant option
+            and user B granted the same privilage to another user C, Then revoking privilages from user B may cause
+            revoking privilages from user C as Well,
+            Depending on your mysql version we can avoid this issue by using RESTRICT keyword at the end of the
+            statement:
+        </p>
+        <pre><code class="language-sql">
+REVOKE INSERT ON sample.customer FROM 'usr1'@'localhost' RESTRICT;
+-- this will throw an error if there are cascading privilages
+</code></pre>
+        <p>That's it!</p>
+        <script src="./prism.js"></script>
 </body>
 
 </html>
