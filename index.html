@@ -139,8 +139,7 @@ REVOKE ALL ON sample.* FROM 'usr1'@'localhost';
     </ul>
     <p>Single level means, you can't distribute the privileges you got from your upper layer.</p>
     <p>Create a new user account 'usr2'@'localhost' using root user, and try below commands using the
-        'usr1'@'localhost'
-        account</p>
+        'usr1'@'localhost'</p>
     <pre><code class="language-sql">
 GRANT INSERT ON sample.customer TO 'usr2'@'localhost';
     </code></pre>
